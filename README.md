@@ -1,5 +1,10 @@
 # 🌿 DEMO CRM Benessere
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-demo--crm--benessere.vercel.app-22c55e?style=for-the-badge&logo=vercel)](https://demo-crm-benessere.vercel.app/)
+[![Supabase](https://img.shields.io/badge/Supabase-Database%20%26%20Auth-3ecf8e?style=for-the-badge&logo=supabase)](https://supabase.com)
+[![React](https://img.shields.io/badge/React%2019-Vite-61dafb?style=for-the-badge&logo=react)](https://react.dev)
+
+> 🚀 **Live Demo**: [https://demo-crm-benessere.vercel.app/](https://demo-crm-benessere.vercel.app/)  
 > **Mini-CRM full-stack mobile-first per la gestione di centri benessere e spa.**  
 > Progettato con architettura cloud sicura, database PostgreSQL con Row Level Security (RLS) a due livelli, pagamenti Stripe automatizzati e assistente AI integrato tramite serverless Edge Functions.
 
