@@ -17,6 +17,35 @@ export function RinnoviView() {
 
   const [rinnovi, setRinnovi] = useState<RinnovoInScadenza[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadingCheckoutId, setLoadingCheckoutId] = useState<number | null>(null)
+  const [erroreCheckout, setErroreCheckout] = useState<string | null>(null)
+
+  async function handlePagaRinnovo(abbonamentoId: number) {
+    setLoadingCheckoutId(abbonamentoId)
+    setErroreCheckout(null)
+
+    try {
+      const { data, error } = await supabase.functions.invoke('crea-checkout-stripe', {
+        body: { abbonamento_id: abbonamentoId },
+      })
+
+      if (error) {
+        throw new Error(error.message || 'Errore nella creazione della sessione Stripe')
+      }
+
+      if (data?.checkout_url) {
+        // Apertura pagina di pagamento Stripe Checkout (in Test Mode)
+        window.open(data.checkout_url, '_blank')
+      } else if (data?.error) {
+        throw new Error(data.error)
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Errore sconosciuto'
+      setErroreCheckout(`Impossibile avviare il checkout: ${msg}. Assicurati di aver impostato il secret STRIPE_SECRET_KEY con la CLI.`)
+    } finally {
+      setLoadingCheckoutId(null)
+    }
+  }
 
   async function loadRinnovi() {
     setLoading(true)
@@ -139,25 +168,31 @@ export function RinnoviView() {
                     )}
                   </div>
 
-                  {/* Azione rapida Rinnovo: agganciata a Stripe in Fase 4 */}
+                  {/* Azione rapida Rinnovo: agganciata a Stripe Checkout via Edge Function */}
                   <Button
                     size="sm"
                     variant="outline"
+                    disabled={loadingCheckoutId === r.abbonamento_id}
                     className="h-8 border-neutral-700 text-neutral-300 hover:text-white hover:bg-neutral-800 text-xs gap-1.5"
-                    onClick={() => {
-                      alert(`In Fase 4 questo pulsante genererà un link di pagamento Stripe Checkout per il rinnovo di ${r.cliente_nome} (${r.piano}).`)
-                    }}
+                    onClick={() => handlePagaRinnovo(r.abbonamento_id)}
                   >
                     <CreditCard className="w-3.5 h-3.5 text-emerald-400" />
-                    <span>Invia Link Stripe</span>
-                    <span className="text-[9px] bg-neutral-800 px-1 rounded text-neutral-400">
-                      Fase 4
+                    <span>
+                      {loadingCheckoutId === r.abbonamento_id
+                        ? 'Creazione link...'
+                        : 'Paga con Stripe (Test)'}
                     </span>
                   </Button>
                 </div>
               </CardContent>
             </Card>
           ))}
+        </div>
+      )}
+
+      {erroreCheckout && (
+        <div className="p-3 text-xs rounded-lg bg-amber-950/70 border border-amber-800 text-amber-200">
+          {erroreCheckout}
         </div>
       )}
     </div>
