@@ -1,0 +1,21 @@
+# Dipendenze e build
+node_modules
+dist
+dist-ssr
+*.local
+
+# Variabili d'ambiente: MAI nel repository (tranne l'esempio senza valori)
+.env
+.env.*
+!.env.example
+
+# Supabase CLI (file temporanei locali)
+supabase/.temp
+supabase/.branches
+
+# Editor / OS
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.log
