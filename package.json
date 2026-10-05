@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "test:rls": "tsx --env-file=.env.local scripts/test-rls.ts"
+    "test:rls": "tsx --env-file=.env.local scripts/test-rls.ts",
+    "test:fase2": "tsx --env-file=.env.local scripts/test-fase2.ts"
   },
   "dependencies": {
     "@fontsource-variable/geist": "^5.3.0",
